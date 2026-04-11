@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Book an Appointment – AS Luxe Jharsuguda</title>
+  <meta name="description" content="Book a consultation with AS Luxe's expert dermatologists. Online and in-clinic appointments available. Fast response guaranteed." />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* ===== BOOKING PAGE STYLES ===== */
+
+    .booking-layout {
+      display: grid;
+      grid-template-columns: 1fr 1.3fr;
+      gap: 60px;
+      align-items: start;
+      padding: 80px 0 100px;
+    }
+
+    /* Sidebar info */
+    .booking-info { position: sticky; top: calc(var(--header-h) + 32px); }
+    .booking-info-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.2rem;
+      line-height: 1.2;
+      color: var(--green-900);
+      margin-bottom: 12px;
+    }
+    .booking-info-sub { color: var(--gray-600); font-size: 0.98rem; line-height: 1.7; margin-bottom: 32px; }
+    .booking-details { display: flex; flex-direction: column; gap: 16px; margin-bottom: 32px; }
+    .booking-detail {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 16px;
+      background: var(--green-50);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--green-100);
+    }
+    .booking-detail-icon {
+      width: 42px; height: 42px;
+      background: white;
+      border-radius: var(--radius-sm);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem;
+      flex-shrink: 0;
+      box-shadow: var(--shadow-sm);
+    }
+    .booking-detail-val { font-weight: 700; font-size: 0.95rem; margin-bottom: 2px; color: var(--text); }
+    .booking-detail-label { font-size: 0.82rem; color: var(--gray-600); }
+    .trust-badges {
+      display: flex; flex-direction: column; gap: 10px;
+      margin-bottom: 28px;
+    }
+    .trust-badge-item {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 0.875rem;
+      color: var(--gray-600);
+    }
+    .trust-badge-check {
+      width: 22px; height: 22px;
+      background: var(--green-100);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.7rem;
+      color: var(--green-600);
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .wa-quick {
+      background: #f0fdf4;
+      border: 1.5px solid #bbf7d0;
+      border-radius: var(--radius-lg);
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .wa-quick-icon { font-size: 2rem; flex-shrink: 0; }
+    .wa-quick-text { font-size: 0.88rem; color: var(--gray-600); flex: 1; line-height: 1.5; }
+    .wa-quick-text strong { display: block; color: var(--text); margin-bottom: 2px; }
+
+    /* Form */
+    .booking-form-wrap {
+      background: white;
+      border-radius: var(--radius-xl);
+      padding: 40px;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--gray-200);
+    }
+    .booking-form-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      color: var(--green-900);
+      margin-bottom: 4px;
+    }
+    .booking-form-sub { font-size: 0.9rem; color: var(--gray-600); margin-bottom: 28px; }
+    .booking-form { display: flex; flex-direction: column; gap: 20px; }
+
+    /* Mode selector */
+    .mode-selector { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .mode-option { display: none; }
+    .mode-label {
+      border: 2px solid var(--gray-200);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+      cursor: pointer;
+      transition: all var(--transition);
+      display: flex; align-items: center; gap: 10px;
+      font-weight: 600;
+      font-size: 0.88rem;
+      color: var(--gray-600);
+      min-height: 52px;
+    }
+    .mode-label:hover { border-color: var(--green-300); background: var(--green-50); }
+    .mode-option:checked + .mode-label {
+      border-color: var(--green-500);
+      background: var(--green-50);
+      color: var(--green-700);
+    }
+    .mode-label-icon { font-size: 1.4rem; }
+
+    /* Progress indicator */
+    .form-progress {
+      display: flex; gap: 8px; margin-bottom: 28px;
+    }
+    .progress-step {
+      flex: 1; height: 4px;
+      background: var(--gray-200);
+      border-radius: 2px;
+      transition: background 0.4s;
+    }
+    .progress-step.active { background: var(--green-500); }
+
+    /* Success state */
+    .booking-success {
+      display: none;
+      text-align: center;
+      padding: 48px 24px;
+    }
+    .booking-success.show { display: block; }
+    .success-icon {
+      width: 80px; height: 80px;
+      background: var(--green-100);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2.5rem;
+      margin: 0 auto 20px;
+    }
+    .success-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      color: var(--green-700);
+      margin-bottom: 8px;
+    }
+    .success-sub { font-size: 0.95rem; color: var(--gray-600); line-height: 1.7; margin-bottom: 24px; max-width: 360px; margin-left: auto; margin-right: auto; }
+    .success-details {
+      background: var(--green-50);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      margin-bottom: 24px;
+      text-align: left;
+    }
+    .success-detail-row {
+      display: flex; gap: 8px;
+      font-size: 0.875rem;
+      padding: 6px 0;
+      border-bottom: 1px solid var(--green-100);
+    }
+    .success-detail-row:last-child { border-bottom: none; }
+    .success-detail-label { color: var(--gray-600); font-weight: 600; min-width: 110px; }
+    .success-detail-val { color: var(--text); }
+
+    /* FAQ mini */
+    .booking-faq { margin-top: 48px; }
+    .booking-faq h3 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; color: var(--text); }
+
+    @media (max-width: 960px) {
+      .booking-layout { grid-template-columns: 1fr; gap: 40px; }
+      .booking-info { position: static; }
+    }
+    @media (max-width: 640px) {
+      .booking-layout { padding: 40px 0 80px; }
+      .booking-form-wrap { padding: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="header-root"></div>
+
+  <main>
+
+    <!-- Hero -->
+    <div class="page-hero">
+      <div class="container">
+        <div class="highlight-chip" style="background:rgba(255,255,255,0.12);border-color:rgba(255,255,255,0.2);color:white;">📅 Quick Booking</div>
+        <h1>Book Your Consultation</h1>
+        <p>In-clinic & online appointments available. Consultation fee adjusted against treatment cost.</p>
+      </div>
+    </div>
+
+    <section style="padding-top:0;">
+      <div class="container">
+        <div class="booking-layout">
+
+          <!-- LEFT: Info sidebar -->
+          <div class="booking-info">
+            <p class="booking-info-title">Your Journey to Radiant Skin Starts Here</p>
+            <p class="booking-info-sub">Fill out the form and our team will confirm your appointment within 2 hours during clinic hours.</p>
+
+            <div class="booking-details">
+              <div class="booking-detail">
+                <div class="booking-detail-icon">⏱️</div>
+                <div>
+                  <div class="booking-detail-val">30 Minutes</div>
+                  <div class="booking-detail-label">Consultation duration</div>
+                </div>
+              </div>
+              <div class="booking-detail">
+                <div class="booking-detail-icon">💰</div>
+                <div>
+                  <div class="booking-detail-val">₹500 (In-Clinic) · ₹300 (Online)</div>
+                  <div class="booking-detail-label">Consultation fee · Adjusted against treatment</div>
+                </div>
+              </div>
+              <div class="booking-detail">
+                <div class="booking-detail-icon">🏠</div>
+                <div>
+                  <div class="booking-detail-val">In-Clinic & Online</div>
+                  <div class="booking-detail-label">Your choice of visit mode</div>
+                </div>
+              </div>
+              <div class="booking-detail">
+                <div class="booking-detail-icon">🕐</div>
+                <div>
+                  <div class="booking-detail-val">Mon–Sat: 9 AM – 8 PM</div>
+                  <div class="booking-detail-label">Sunday by appointment only</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="trust-badges">
+              <div class="trust-badge-item">
+                <div class="trust-badge-check">✓</div>
+                <span>We confirm your appointment within 2 hours</span>
+              </div>
+              <div class="trust-badge-item">
+                <div class="trust-badge-check">✓</div>
+                <span>Free rescheduling up to 4 hours before</span>
+              </div>
+              <div class="trust-badge-item">
+                <div class="trust-badge-check">✓</div>
+                <span>Consultation fee adjusted against treatment</span>
+              </div>
+              <div class="trust-badge-item">
+                <div class="trust-badge-check">✓</div>
+                <span>All data kept 100% confidential</span>
+              </div>
+            </div>
+
+            <div class="wa-quick">
+              <div class="wa-quick-icon">💬</div>
+              <div class="wa-quick-text">
+                <strong>Prefer WhatsApp?</strong>
+                Message us directly and our team will help you book.
+              </div>
+              <a href="https://wa.me/911234567890?text=Hi%2C%20I%27d%20like%20to%20book%20an%20appointment" target="_blank" rel="noopener" class="btn btn-whatsapp btn-sm">Chat</a>
+            </div>
+
+            <div class="booking-faq">
+              <h3>Quick Answers</h3>
+              <div class="accordion-item">
+                <button class="accordion-btn" style="font-size:0.9rem;">Can I walk in without an appointment?
+                  <span class="accordion-icon">+</span>
+                </button>
+                <div class="accordion-body">Walk-ins are welcome but subject to doctor availability. We recommend booking in advance to secure your preferred time slot.</div>
+              </div>
+              <div class="accordion-item">
+                <button class="accordion-btn" style="font-size:0.9rem;">How does online consultation work?
+                  <span class="accordion-icon">+</span>
+                </button>
+                <div class="accordion-body">After booking, you'll receive a WhatsApp/Google Meet link. Share photos of your concern beforehand. The doctor will analyze them and provide personalized recommendations during the video call.</div>
+              </div>
+              <div class="accordion-item">
+                <button class="accordion-btn" style="font-size:0.9rem;">Is the booking fee refundable?
+                  <span class="accordion-icon">+</span>
+                </button>
+                <div class="accordion-body">The consultation fee is fully adjustable against your treatment cost if you proceed at our clinic. Cancellations 4+ hours before are fully refunded.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT: Booking form -->
+          <div class="booking-form-wrap">
+            <div id="formWrap">
+              <div class="booking-form-title">Book Appointment</div>
+              <p class="booking-form-sub">Fill in the details below. We confirm within 2 hours.</p>
+              <div class="form-progress" aria-label="Form progress">
+                <div class="progress-step active" id="p1"></div>
+                <div class="progress-step active" id="p2"></div>
+                <div class="progress-step" id="p3"></div>
+              </div>
+              <form class="booking-form" id="bookingForm" novalidate>
+
+                <div class="form-grid">
+                  <div class="form-group">
+                    <label class="form-label" for="b-name">Full Name <span class="req">*</span></label>
+                    <input class="form-control" id="b-name" type="text" placeholder="Your name" required aria-required="true" />
+                    <span class="form-error">Name is required</span>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="b-phone">Phone Number <span class="req">*</span></label>
+                    <input class="form-control" id="b-phone" type="tel" placeholder="+91 98765 43210" required aria-required="true" pattern="[0-9+\s\-]{8,15}" />
+                    <span class="form-error">Enter a valid phone number</span>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="b-email">Email Address</label>
+                  <input class="form-control" id="b-email" type="email" placeholder="your@email.com" />
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="b-treatment">Interested Treatment / Concern <span class="req">*</span></label>
+                  <select class="form-control" id="b-treatment" required aria-required="true">
+                    <option value="" disabled selected>Select a treatment or concern</option>
+                    <optgroup label="Programs (Best Value)">
+                      <option>Clear Skin Acne Program</option>
+                      <option>Hair Regrowth Program</option>
+                      <option>Age Reversal Program</option>
+                      <option>Bridal Glow Package</option>
+                      <option>Body Sculpt Program</option>
+                    </optgroup>
+                    <optgroup label="Face & Skin">
+                      <option>Acne Treatment</option>
+                      <option>Chemical Peel</option>
+                      <option>HydraFacial</option>
+                      <option>Q-Switch Laser</option>
+                      <option>RF Microneedling</option>
+                      <option>Skin Mesotherapy</option>
+                    </optgroup>
+                    <optgroup label="Hair & Scalp">
+                      <option>PRP Hair Therapy</option>
+                      <option>GFC Treatment</option>
+                      <option>Hair Mesotherapy</option>
+                      <option>Dandruff Treatment</option>
+                    </optgroup>
+                    <optgroup label="Body">
+                      <option>Body Contouring</option>
+                      <option>Laser Hair Removal</option>
+                      <option>Stretch Mark Therapy</option>
+                    </optgroup>
+                    <optgroup label="Injectables">
+                      <option>Botox</option>
+                      <option>Dermal Fillers</option>
+                      <option>IV Skin Drip</option>
+                    </optgroup>
+                    <option value="general">General Consultation (Not Sure Yet)</option>
+                  </select>
+                  <span class="form-error">Please select a treatment</span>
+                </div>
+
+                <div class="form-grid">
+                  <div class="form-group">
+                    <label class="form-label" for="b-date">Preferred Date <span class="req">*</span></label>
+                    <input class="form-control" id="b-date" type="date" required aria-required="true" />
+                    <span class="form-error">Please select a date</span>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="b-time">Preferred Time <span class="req">*</span></label>
+                    <select class="form-control" id="b-time" required aria-required="true">
+                      <option value="" disabled selected>Select time</option>
+                      <option>9:00 AM – 10:00 AM</option>
+                      <option>10:00 AM – 11:00 AM</option>
+                      <option>11:00 AM – 12:00 PM</option>
+                      <option>12:00 PM – 1:00 PM</option>
+                      <option>2:00 PM – 3:00 PM</option>
+                      <option>3:00 PM – 4:00 PM</option>
+                      <option>4:00 PM – 5:00 PM</option>
+                      <option>5:00 PM – 6:00 PM</option>
+                      <option>6:00 PM – 7:00 PM</option>
+                      <option>7:00 PM – 8:00 PM</option>
+                    </select>
+                    <span class="form-error">Please select a time</span>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">Preferred Mode <span class="req">*</span></label>
+                  <div class="mode-selector" role="radiogroup" aria-label="Appointment mode">
+                    <input type="radio" name="b-mode" id="mode-clinic" value="In-Clinic" class="mode-option" required checked />
+                    <label class="mode-label" for="mode-clinic">
+                      <span class="mode-label-icon">🏥</span>
+                      <span>In-Clinic<br><small style="font-weight:400;color:var(--gray-400);">₹500 fee</small></span>
+                    </label>
+                    <input type="radio" name="b-mode" id="mode-online" value="Online" class="mode-option" />
+                    <label class="mode-label" for="mode-online">
+                      <span class="mode-label-icon">📱</span>
+                      <span>Online<br><small style="font-weight:400;color:var(--gray-400);">₹300 fee</small></span>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="b-notes">Additional Notes <span style="font-weight:400;color:var(--gray-400);">(Optional)</span></label>
+                  <textarea class="form-control" id="b-notes" rows="3" placeholder="Share anything relevant — skin concerns, allergies, previous treatments, etc." style="resize:vertical;"></textarea>
+                </div>
+
+                <div style="background:var(--green-50);border:1px solid var(--green-100);border-radius:var(--radius-md);padding:12px 16px;font-size:0.82rem;color:var(--gray-600);display:flex;gap:10px;align-items:flex-start;">
+                  <span style="flex-shrink:0;color:var(--green-500);font-size:1rem;">🔒</span>
+                  <span>Your information is kept completely confidential and used only to manage your appointment. We respond within 2 hours during clinic hours (Mon–Sat, 9AM–8PM).</span>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-full btn-lg">📅 Confirm Appointment →</button>
+
+                <p style="text-align:center;font-size:0.8rem;color:var(--gray-400);margin-top:4px;">
+                  By booking, you agree to our <a href="#" style="color:var(--green-600);">cancellation policy</a>
+                </p>
+              </form>
+            </div>
+
+            <!-- Success state -->
+            <div class="booking-success" id="bookingSuccess">
+              <div class="success-icon">✅</div>
+              <div class="success-title">Appointment Requested!</div>
+              <p class="success-sub">Our team will confirm your slot within 2 hours via WhatsApp and call. Please keep your phone accessible.</p>
+              <div class="success-details" id="successDetails">
+                <!-- filled by JS -->
+              </div>
+              <div style="display:flex;flex-direction:column;gap:10px;">
+                <a href="https://wa.me/911234567890?text=Hi%2C%20I%20just%20booked%20an%20appointment%20via%20your%20website" target="_blank" rel="noopener" class="btn btn-whatsapp btn-full">💬 Send us a WhatsApp confirmation</a>
+                <a href="index.html" class="btn btn-secondary btn-full">← Back to Home</a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <div id="footer-root"></div>
+  <div id="floating-root"></div>
+
+  <script src="main.js"></script>
+  <script>
+    document.getElementById('header-root').innerHTML = buildHeader('booking');
+    document.getElementById('footer-root').innerHTML = buildFooter();
+    document.getElementById('floating-root').innerHTML = buildFloatingButtons();
+
+    // Set min date to today
+    const dateInput = document.getElementById('b-date');
+    if (dateInput) {
+      const today = new Date();
+      const yyyy = today.getFullYear();
+      const mm = String(today.getMonth() + 1).padStart(2, '0');
+      const dd = String(today.getDate()).padStart(2, '0');
+      dateInput.min = `${yyyy}-${mm}-${dd}`;
+    }
+
+    // Progress indicator on focus
+    const fields = ['b-name', 'b-phone', 'b-treatment', 'b-date', 'b-time'];
+    const progressSteps = [document.getElementById('p1'), document.getElementById('p2'), document.getElementById('p3')];
+    function updateProgress() {
+      const filled = fields.filter(id => {
+        const el = document.getElementById(id);
+        return el && el.value.trim();
+      }).length;
+      progressSteps[0].classList.toggle('active', filled >= 1);
+      progressSteps[1].classList.toggle('active', filled >= 3);
+      progressSteps[2].classList.toggle('active', filled >= 5);
+    }
+    fields.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.addEventListener('input', updateProgress);
+      if (el) el.addEventListener('change', updateProgress);
+    });
+
+    // Booking form submit
+    const bookingForm = document.getElementById('bookingForm');
+    const formWrap = document.getElementById('formWrap');
+    const bookingSuccess = document.getElementById('bookingSuccess');
+    const successDetails = document.getElementById('successDetails');
+
+    if (bookingForm) {
+      bookingForm.addEventListener('submit', e => {
+        e.preventDefault();
+        let valid = true;
+        const required = bookingForm.querySelectorAll('[required]');
+        required.forEach(field => {
+          if (!field.value.trim()) {
+            field.classList.add('error');
+            valid = false;
+          } else {
+            field.classList.remove('error');
+          }
+        });
+        if (!valid) {
+          bookingForm.querySelector('.form-control.error')?.focus();
+          return;
+        }
+
+        // Get values
+        const name = document.getElementById('b-name').value.trim();
+        const phone = document.getElementById('b-phone').value.trim();
+        const treatment = document.getElementById('b-treatment').value;
+        const date = document.getElementById('b-date').value;
+        const time = document.getElementById('b-time').value;
+        const mode = document.querySelector('input[name="b-mode"]:checked')?.value || 'In-Clinic';
+
+        // Format date
+        const dateFormatted = date ? new Date(date + 'T00:00:00').toLocaleDateString('en-IN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) : date;
+
+        successDetails.innerHTML = `
+          <div class="success-detail-row"><span class="success-detail-label">Name</span><span class="success-detail-val">${name}</span></div>
+          <div class="success-detail-row"><span class="success-detail-label">Phone</span><span class="success-detail-val">${phone}</span></div>
+          <div class="success-detail-row"><span class="success-detail-label">Treatment</span><span class="success-detail-val">${treatment}</span></div>
+          <div class="success-detail-row"><span class="success-detail-label">Date</span><span class="success-detail-val">${dateFormatted}</span></div>
+          <div class="success-detail-row"><span class="success-detail-label">Time</span><span class="success-detail-val">${time}</span></div>
+          <div class="success-detail-row"><span class="success-detail-label">Mode</span><span class="success-detail-val">${mode}</span></div>
+        `;
+
+        formWrap.style.display = 'none';
+        bookingSuccess.classList.add('show');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+
+      bookingForm.querySelectorAll('.form-control').forEach(field => {
+        field.addEventListener('input', () => field.classList.remove('error'));
+        field.addEventListener('change', () => field.classList.remove('error'));
+      });
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Treatments & Packages – AS Luxe Jharsuguda</title>
+  <meta name="description" content="Browse all skin, hair, and body treatments at AS Luxe. Explore our expert packages, pricing, and session details. Book online or on WhatsApp." />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* ===== SERVICES PAGE STYLES ===== */
+
+    /* Tabs */
+    .services-tabs {
+      display: flex;
+      gap: 8px;
+      border-bottom: 2px solid var(--gray-200);
+      margin-bottom: 48px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .services-tabs::-webkit-scrollbar { display: none; }
+    .tab-btn {
+      padding: 12px 22px;
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: var(--gray-600);
+      border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+      transition: all var(--transition);
+      white-space: nowrap;
+      min-height: 48px;
+      background: none;
+      border: none;
+      position: relative;
+      cursor: pointer;
+    }
+    .tab-btn::after {
+      content: '';
+      position: absolute;
+      bottom: -2px; left: 0; right: 0;
+      height: 2px;
+      background: var(--green-600);
+      transform: scaleX(0);
+      transition: transform var(--transition);
+    }
+    .tab-btn.active { color: var(--green-700); }
+    .tab-btn.active::after { transform: scaleX(1); }
+    .tab-btn:hover { color: var(--green-600); background: var(--green-50); }
+
+    /* Tab content */
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* Package cards */
+    .pkg-card {
+      background: white;
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--gray-200);
+      box-shadow: var(--shadow-sm);
+      padding: 28px;
+      position: relative;
+      overflow: hidden;
+      transition: all var(--transition);
+      cursor: pointer;
+    }
+    .pkg-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--green-500), var(--green-300));
+    }
+    .pkg-card.featured::before { background: linear-gradient(90deg, var(--gold), var(--gold-light)); }
+    .pkg-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-3px); }
+    .pkg-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.25rem;
+      color: var(--green-900);
+      margin-bottom: 8px;
+    }
+    .pkg-desc { font-size: 0.9rem; color: var(--gray-600); margin-bottom: 16px; line-height: 1.6; }
+    .pkg-sessions {
+      display: flex; gap: 16px; flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+    .pkg-session-chip {
+      background: var(--green-50);
+      border-radius: var(--radius-full);
+      padding: 4px 12px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--green-700);
+      display: flex; align-items: center; gap: 4px;
+    }
+    .pkg-price-row {
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 8px;
+      margin-top: 16px;
+    }
+    .pkg-price {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.7rem;
+      color: var(--green-700);
+      font-weight: 700;
+    }
+    .pkg-price-orig {
+      font-size: 0.85rem;
+      color: var(--gray-400);
+      text-decoration: line-through;
+      margin-left: 6px;
+    }
+
+    /* Treatment cards (individual) */
+    .treatment-section-head {
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid var(--green-100);
+    }
+    .treatment-section-icon { font-size: 1.8rem; }
+    .treatment-section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      color: var(--green-900);
+    }
+    .treatment-section-count {
+      margin-left: auto;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--gray-400);
+      background: var(--gray-100);
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+    }
+    .treatments-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-bottom: 48px;
+    }
+    .treatment-card {
+      background: white;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--gray-200);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+    .treatment-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+    .treatment-card-img {
+      width: 100%;
+      aspect-ratio: 16/9;
+      object-fit: cover;
+    }
+    .treatment-card-img.img-placeholder { aspect-ratio: 16/9; font-size: 2.5rem; }
+    .treatment-card-body { padding: 18px; }
+    .treatment-card-name { font-weight: 700; font-size: 0.95rem; margin-bottom: 4px; color: var(--text); }
+    .treatment-card-tag { font-size: 0.75rem; color: var(--green-600); font-weight: 600; margin-bottom: 8px; }
+    .treatment-card-desc { font-size: 0.83rem; color: var(--gray-600); line-height: 1.5; margin-bottom: 14px; }
+    .treatment-card-footer {
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .treatment-price { font-weight: 700; color: var(--green-700); font-size: 0.9rem; }
+    .treatment-sessions { font-size: 0.75rem; color: var(--gray-400); }
+    .treatment-tap-hint {
+      font-size: 0.7rem;
+      color: var(--green-400);
+      font-weight: 600;
+      margin-top: 8px;
+      display: flex; align-items: center; gap: 4px;
+    }
+
+    /* ---- Bottom Sheet Modal ---- */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 9000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      backdrop-filter: blur(2px);
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+    .modal-sheet {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      z-index: 9001;
+      background: white;
+      border-radius: 24px 24px 0 0;
+      max-height: 92svh;
+      overflow-y: auto;
+      transform: translateY(100%);
+      transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 -8px 40px rgba(0,0,0,0.2);
+    }
+    .modal-sheet.open { transform: translateY(0); }
+    .modal-drag-handle {
+      width: 40px; height: 4px;
+      background: var(--gray-200);
+      border-radius: 2px;
+      margin: 14px auto 0;
+    }
+    .modal-close {
+      position: absolute;
+      top: 16px; right: 16px;
+      width: 36px; height: 36px;
+      background: var(--gray-100);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all var(--transition);
+      border: none;
+      z-index: 2;
+    }
+    .modal-close:hover { background: var(--gray-200); }
+    .modal-content { padding: 16px 24px 40px; }
+    .modal-badge { margin-bottom: 12px; }
+    .modal-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.7rem;
+      color: var(--green-900);
+      margin-bottom: 8px;
+    }
+    .modal-tagline { font-size: 0.95rem; color: var(--green-600); font-weight: 600; margin-bottom: 16px; }
+    .modal-desc { font-size: 0.93rem; color: var(--gray-600); line-height: 1.7; margin-bottom: 24px; }
+    .modal-section-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--gray-400);
+      margin-bottom: 10px;
+    }
+    .modal-benefits { margin-bottom: 24px; }
+    .modal-benefits li {
+      display: flex; align-items: flex-start; gap: 10px;
+      font-size: 0.9rem;
+      color: var(--gray-600);
+      padding: 5px 0;
+    }
+    .modal-benefits li::before {
+      content: '✓';
+      color: var(--green-500);
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .modal-ba-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .modal-ba-img {
+      aspect-ratio: 3/4;
+      border-radius: var(--radius-md);
+      width: 100%;
+      object-fit: cover;
+    }
+    .modal-ba-img.img-placeholder { font-size: 3rem; }
+    .modal-info-row {
+      display: flex; gap: 16px; flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+    .modal-info-chip {
+      background: var(--green-50);
+      border: 1px solid var(--green-100);
+      border-radius: var(--radius-md);
+      padding: 12px 16px;
+      font-size: 0.83rem;
+      flex: 1; min-width: 100px;
+    }
+    .modal-info-chip-val { font-weight: 700; color: var(--green-700); font-size: 1rem; }
+    .modal-info-chip-label { color: var(--gray-600); }
+    .modal-cta-row {
+      display: flex; gap: 10px;
+      position: sticky;
+      bottom: 0;
+      background: white;
+      padding: 16px 0 0;
+      border-top: 1px solid var(--gray-100);
+      margin: 16px -24px -40px;
+      padding: 16px 24px 24px;
+    }
+    .modal-cta-row .btn { flex: 1; }
+
+    @media (max-width: 640px) {
+      .modal-content { padding: 12px 16px 32px; }
+      .modal-cta-row { margin: 16px -16px -32px; padding: 12px 16px 16px; }
+      .treatments-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 480px) {
+      .treatments-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="header-root"></div>
+
+  <main>
+
+    <div class="page-hero">
+      <div class="container">
+        <div class="highlight-chip" style="background:rgba(255,255,255,0.12);border-color:rgba(255,255,255,0.2);color:white;">✦ AS Luxe</div>
+        <h1>Treatments & Packages</h1>
+        <p>Clinically proven, doctor-curated treatments for your skin, hair, and body. Tap any treatment to learn more.</p>
+      </div>
+    </div>
+
+    <section>
+      <div class="container">
+        <!-- Tabs -->
+        <div class="services-tabs" role="tablist" aria-label="Treatment categories">
+          <button class="tab-btn active" role="tab" aria-selected="true" data-tab="packages">📦 Packages</button>
+          <button class="tab-btn" role="tab" aria-selected="false" data-tab="face">🧖 Face & Skin</button>
+          <button class="tab-btn" role="tab" aria-selected="false" data-tab="hair">💆 Hair & Scalp</button>
+          <button class="tab-btn" role="tab" aria-selected="false" data-tab="body">🌊 Body</button>
+          <button class="tab-btn" role="tab" aria-selected="false" data-tab="injectables">💉 Injectables</button>
+        </div>
+
+        <!-- PACKAGES TAB -->
+        <div class="tab-content active" id="tab-packages" role="tabpanel">
+          <div class="section-head">
+            <div class="section-label">Best Value</div>
+            <h2 class="section-title">Treatment Programs</h2>
+            <p class="section-sub">Multi-session programs combining the best therapies for maximum, lasting results.</p>
+          </div>
+          <div class="grid-3">
+            <div class="pkg-card animate" data-modal="pkg-acne">
+              <div style="margin-bottom:12px;"><span class="badge badge-green">Most Popular</span></div>
+              <div class="pkg-name">Clear Skin Acne Program</div>
+              <p class="pkg-desc">3-month intensive program targeting active acne, reducing marks and preventing future breakouts with medical-grade protocols.</p>
+              <div class="pkg-sessions">
+                <span class="pkg-session-chip">⏱ 3 Months</span>
+                <span class="pkg-session-chip">📅 6 Sessions</span>
+                <span class="pkg-session-chip">👩‍⚕️ Doctor-led</span>
+              </div>
+              <ul class="program-includes" style="margin-bottom:0">
+                <li>6 Medical-grade chemical peels</li>
+                <li>Customized skincare prescription</li>
+                <li>Monthly doctor review</li>
+                <li>Diet & lifestyle guidance</li>
+              </ul>
+              <div class="pkg-price-row">
+                <div><span class="pkg-price">₹8,999</span><span class="pkg-price-orig">₹11,500</span></div>
+                <a href="booking.html" class="btn btn-primary btn-sm">Book Program</a>
+              </div>
+            </div>
+
+            <div class="pkg-card featured animate" data-modal="pkg-hair">
+              <div style="margin-bottom:12px;"><span class="badge badge-gold">Premium</span></div>
+              <div class="pkg-name">Hair Regrowth Program</div>
+              <p class="pkg-desc">Advanced 4-session protocol combining PRP, mesotherapy, and scalp care to restore dense, healthy hair growth.</p>
+              <div class="pkg-sessions">
+                <span class="pkg-session-chip">⏱ 4 Months</span>
+                <span class="pkg-session-chip">📅 4 Sessions</span>
+                <span class="pkg-session-chip">👨‍⚕️ Dr. Arjun</span>
+              </div>
+              <ul class="program-includes" style="margin-bottom:0">
+                <li>4 PRP therapy sessions</li>
+                <li>Scalp analysis & deep treatment</li>
+                <li>Hair growth serums included</li>
+                <li>Nutritional assessment</li>
+              </ul>
+              <div class="pkg-price-row">
+                <div><span class="pkg-price">₹14,999</span><span class="pkg-price-orig">₹19,000</span></div>
+                <a href="booking.html" class="btn btn-primary btn-sm">Book Program</a>
+              </div>
+            </div>
+
+            <div class="pkg-card animate" data-modal="pkg-glow">
+              <div style="margin-bottom:12px;"><span class="badge badge-green">Anti-Ageing</span></div>
+              <div class="pkg-name">Age Reversal Program</div>
+              <p class="pkg-desc">A 2-month holistic anti-ageing plan targeting fine lines, sagging, pigmentation and dullness for a visibly youthful glow.</p>
+              <div class="pkg-sessions">
+                <span class="pkg-session-chip">⏱ 2 Months</span>
+                <span class="pkg-session-chip">📅 5 Sessions</span>
+                <span class="pkg-session-chip">🌟 Comprehensive</span>
+              </div>
+              <ul class="program-includes" style="margin-bottom:0">
+                <li>Botox / filler consultation</li>
+                <li>3 RF skin tightening sessions</li>
+                <li>Antioxidant IV therapy drip</li>
+                <li>Premium skincare kit</li>
+              </ul>
+              <div class="pkg-price-row">
+                <div><span class="pkg-price">₹19,999</span><span class="pkg-price-orig">₹25,000</span></div>
+                <a href="booking.html" class="btn btn-primary btn-sm">Book Program</a>
+              </div>
+            </div>
+
+            <div class="pkg-card animate" data-modal="pkg-glow2">
+              <div style="margin-bottom:12px;"><span class="badge badge-green">Glow Series</span></div>
+              <div class="pkg-name">Bridal Glow Package</div>
+              <p class="pkg-desc">The ultimate pre-bridal skin preparation program. Achieve radiant, flawless skin for your special day over 8 weeks.</p>
+              <div class="pkg-sessions">
+                <span class="pkg-session-chip">⏱ 8 Weeks</span>
+                <span class="pkg-session-chip">📅 5 Sessions</span>
+                <span class="pkg-session-chip">💍 Bridal</span>
+              </div>
+              <ul class="program-includes" style="margin-bottom:0">
+                <li>2 HydraFacial sessions</li>
+                <li>Glow peel + brightening serum</li>
+                <li>Mesotherapy glow treatment</li>
+                <li>Skincare starter kit</li>
+              </ul>
+              <div class="pkg-price-row">
+                <div><span class="pkg-price">₹12,499</span><span class="pkg-price-orig">₹16,000</span></div>
+                <a href="booking.html" class="btn btn-primary btn-sm">Book Program</a>
+              </div>
+            </div>
+
+            <div class="pkg-card animate" data-modal="pkg-body">
+              <div style="margin-bottom:12px;"><span class="badge badge-green">Body</span></div>
+              <div class="pkg-name">Body Sculpt Program</div>
+              <p class="pkg-desc">Non-invasive fat reduction and skin tightening program for targeted areas. No surgery, no downtime, real results.</p>
+              <div class="pkg-sessions">
+                <span class="pkg-session-chip">⏱ 6 Weeks</span>
+                <span class="pkg-session-chip">📅 6 Sessions</span>
+                <span class="pkg-session-chip">💪 Non-invasive</span>
+              </div>
+              <ul class="program-includes" style="margin-bottom:0">
+                <li>6 body contouring sessions</li>
+                <li>Lymphatic drainage massage</li>
+                <li>Diet & lifestyle plan</li>
+                <li>Measurement tracking</li>
+              </ul>
+              <div class="pkg-price-row">
+                <div><span class="pkg-price">₹22,999</span><span class="pkg-price-orig">₹29,000</span></div>
+                <a href="booking.html" class="btn btn-primary btn-sm">Book Program</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- FACE TAB -->
+        <div class="tab-content" id="tab-face" role="tabpanel">
+          <div class="treatment-section-head">
+            <div class="treatment-section-icon">🧖</div>
+            <div class="treatment-section-title">Face & Skin Treatments</div>
+            <div class="treatment-section-count">8 treatments</div>
+          </div>
+          <div class="treatments-grid">
+            <div class="treatment-card animate" data-modal="acne-tx">
+              <div class="treatment-card-img img-placeholder">🌸</div>
+              <div class="treatment-card-body">
+                <div class="treatment-card-tag">Acne & Skin</div>
+                <div class="treatment-card-name">Acne Treatment</div>
+                <p class="treatment-card-desc">Medical-grade protocol combining topicals, peels, and light therapy to clear and prevent acne.</p>
+                <div class="treatment-card-footer">
+                  <span class="treatment-price">From ₹1,500/session</span>
+                  <span class="treatment-sessions">4–8 sessions</span>
+                </div>
+                <div class="treatment-tap-hint">👆 Tap for details</div>
+              </div>
+            </div>
+            <div class="treatment-card animate" data-modal="hydra-tx">
+              <div class="treatment-card-img img-placeholder">💧</div>
+              <div class="treatment-card-body">
+                <div class="treatment-card-tag">Glow & Cleanse</div>
+                <div class="treatment-card-name">HydraFacial</div>
+                <p class="treatment-card-desc">Deep cleansing, exfoliation, extraction and hydration in one treatment. Instant glow, zero downtime.</p>
+                <div class="treatment-card-footer">
+                  <span class="treatment-price">From ₹3,500/session</span>
+                  <span class="treatment-sessions">Monthly</span>
+                </div>
+                <div class="treatment-tap-hint">👆 Tap for details</div>
+              </div>
+            </div>
+            <div class="treatment-card animate" data-modal="peel-tx">
+              <div class="treatment-card-img img-placeholder">✨</div>
+              <div class="treatment-card-body">
+                <div class="treatment-card-tag">Brightening</div>
+                <div class="treatment-card-name">Chemical Peel</div>
+                <p class="treatment-card-desc">Customized peels targeting pigmentation, acne, fine lines, or overall brightening based on your skin needs.</p>
+                <div class="treatment-card-footer">
+                  <span class="treatment-price">From ₹1,200/session</span>
+                  <span class="treatment-sessions">4–6 sessions</span>
+                </div>
+                <div class="treatment-tap-hint">👆 Tap for details</div>
+              </div>
+            </div>
+            <div class="treatment-card animate" data-modal="laser-tx">
+              <div class="treatment-card-img img-placeholder">🔬</div>
+              <div class="treatment-card-body">
+                <div class="treatment-card-tag">Laser</div>
+                <div class="treatment-card-name">Q-Switch Laser</div>
+                <p class="treatment-card-desc">FDA-cleared laser for pigmentation, sun spots, melasma, and tattoo removal. Safe for all skin types.</p>
+                <div class="treatment-card-footer">
+                  <span class="treatment-price">From ₹2,500/session</span>
+                  <span class="treatment-sessions">3–6 sessions</span>
+                </div>
+                <div class="treatment-tap-hint">👆 Tap for details</div>
+              </div>
+            </div>
+            <div class="treatment-card animate" data-modal="micro-tx">
+              <div class="treatment-card-img img-placeholder">⚡</div>
+              <div class="treatment-card-body">
+                <div class="treatment-card-tag">Skin Rejuvenation</div>
+                <div class="treatment-card-name">Microneedling (RF)</div>
+                <p class="treatment-card-desc">Stimulates collagen for smoother texture, reduced pores, and scar improvement. Excellent for acne scars.</p>
+                <div class="treatment-card-footer">
+                  <span class="treatment-price">From ₹4,000/session</span>
+                  <span class="treatment-sessions">3–5 sessions</span>
+                </div>
+                <div class="treatment-tap-hint">👆 Tap for details</div>
+              </div>
+            </div>
+            <div class="treatment-card animate" data-modal="meso-skin-tx">
+              <div class="treatment-card-img img-placeholder">💉</div>
+              <div class="treatment-card-body">
+                <div class="treatment-card-tag">Glow & Hydration</div>
+                <div class="treatment-card-name">Skin Mesotherapy</div>
+                <p class="treatment-card-desc">Micro-injections of vitamins, hyaluronic acid, and nutrients to deeply hydrate and revitalize skin from within.</p>
+                <div class="treatment-card-footer">
+                  <span class="treatment-price">From ₹3,000/session</span>
+                  <span class="treatment-sessions">3–4 sessions</span>
+                </div>
+                <div class="treatment-tap-hint">👆 Tap for details</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- HAIR TAB -->
+        <div class="tab-content" id="tab-hair" role="tabpanel">
+          <div class="treatment-section-head">
+            <div class="treatment-section-icon">💆</div>
+            <div class="treatment-section-title">Hair & Scalp Treatments</div>
+            <div class="treatment-section-count">5 treatments</div>
+          </div>
+          <div class="treatments-grid">
+            <div class="treatment-card animate" data-modal="prp-tx">
+              <div class="treatment-card-img img-placeholder">🌱</div>
+              <div class="treatment-card-body">
+                <div class="treatment-card-tag">Hair Regrowth</div>
+                <div class="treatment-card-name">PRP Hair Therapy</div>
+                <p class="treatment-card-desc">Uses your own platelet-rich plasma to stimulate dormant hair follicles and promote dense natural growth.</p>
+                <div class="treatment-card-footer">
+                  <span class="treatment-price">From ₹3,500/session</span>
+                  <span class="treatment-sessions">4–6 sessions</span>
+                </div>
+                <div class="treatment-tap-hint">👆 Tap for details</div>
+              </div>
+            </div>
+            <div class="treatment-card animate" data-modal="gfc-tx">
+              <div class="treatment-card-img img-placeholder">⚡</div>
+              <div class="treatment-card-body">
+                <div class="treatment-card-tag">Advanced Growth</div>
+                <div class="treatment-card-name">GFC Treatment</div>
+                <p class="treatment-card-desc">Next-generation growth factor concentrate with 10x more growth factors than PRP. Superior hair density results.</p>
+                <div class="treatment-card-footer">
+                  <span class="treatment-price">From ₹5,000/session</span>
+                  <span class="treatment-sessions">4 sessions</span>
+                </div>
+                <div class="treatment-tap-hint">👆 Tap for details</div>
+              </div>
+            </div>
+            <div class="treatment-card animate" data-modal="hair-meso-tx">
+              <div class="treatment-card-img img-placeholder">🔩</div>
+              <div class="treatment-card-body">
+                <div class="treatment-card-tag">Hair Nourishment</div>
+                <div class="treatment-card-name">Hair Mesotherapy</div>
+                <p class="treatment-card-desc">Delivers vitamins, biotin, and DHT blockers directly into the scalp to reduce hair fall and strengthen follicles.</p>
+                <div class="treatment-card-footer">
+                  <span class="treatment-price">From ₹2,500/session</span>
+                  <span class="treatment-sessions">6–8 sessions</span>
+                </div>
+                <div class="treatment-tap-hint">👆 Tap for details</div>
+              </div>
+            </div>
+            <div class="treatment-card animate" data-modal="dandruff-tx">
+              <div class="treatment-card-img img-placeholder">🌿</div>
+              <div class="treatment-card-body">
+                <div class="treatment-card-tag">Scalp Health</div>
+                <div class="treatment-card-name">Dandruff Treatment</div>
+                <p class="treatment-card-desc">Medical scalp correction for seborrheic dermatitis, chronic dandruff, and itchy scalp conditions.</p>
+                <div class="treatment-card-footer">
+                  <span class="treatment-price">From ₹1,500/session</span>
+                  <span class="treatment-sessions">3–6 sessions</span>
+                </div>
+                <div class="treatment-tap-hint">👆 Tap for details</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- BODY TAB -->
+        <div class="tab-content" id="tab-body" role="tabpanel">
+          <div class="treatment-section-head">
+            <div class="treatment-section-icon">🌊</div>
+            <div class="treatment-section-title">Body Treatments</div>
+            <div class="treatment-section-count">4 treatments</div>
+          </div>
+          <div class="treatments-grid">
+            <div class="treatment-card animate" data-modal="body-contour-tx">
+              <div class="treatment-card-img img-placeholder">💪</div>
+              <div class="treatment-card-body">
+                <div class="treatment-card-tag">Fat Reduction</div>
+                <div class="treatment-card-name">Body Contouring</div>
+                <p class="treatment-card-desc">Non-surgical fat reduction using advanced HIFU or radiofrequency for a slimmer, more toned silhouette.</p>
+                <div class="treatment-card-footer">
+                  <span class="treatment-price">From ₹4,500/session</span>
+                  <span class="treatment-sessions">4–8 sessions</span>
+                </div>
+                <div class="treatment-tap-hint">👆 Tap for details</div>
+              </div>
+            </div>
+            <div class="treatment-card animate" data-modal="lhr-tx">
+              <div class="treatment-card-img img-placeholder">🌸</div>
+              <div class="treatment-card-body">
+                <div class="treatment-card-tag">Hair Removal</div>
+                <div class="treatment-card-name">Laser Hair Removal</div>
+                <p class="treatment-card-desc">Diode laser for permanent hair reduction on face, arms, underarms, bikini area, and legs. Safe for Indian skin.</p>
+                <div class="treatment-card-footer">
+                  <span class="treatment-price">From ₹2,000/session</span>
+                  <span class="treatment-sessions">6–8 sessions</span>
+                </div>
+                <div class="treatment-tap-hint">👆 Tap for details</div>
+              </div>
+            </div>
+            <div class="treatment-card animate" data-modal="stretch-tx">
+              <div class="treatment-card-img img-placeholder">⚡</div>
+              <div class="treatment-card-body">
+                <div class="treatment-card-tag">Skin Improvement</div>
+                <div class="treatment-card-name">Stretch Mark Therapy</div>
+                <p class="treatment-card-desc">Fractional laser and RF microneedling to visibly reduce stretch marks and improve skin texture.</p>
+                <div class="treatment-card-footer">
+                  <span class="treatment-price">From ₹3,500/session</span>
+                  <span class="treatment-sessions">4–6 sessions</span>
+                </div>
+                <div class="treatment-tap-hint">👆 Tap for details</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- INJECTABLES TAB -->
+        <div class="tab-content" id="tab-injectables" role="tabpanel">
+          <div class="treatment-section-head">
+            <div class="treatment-section-icon">💉</div>
+            <div class="treatment-section-title">Injectables & Advanced</div>
+            <div class="treatment-section-count">4 treatments</div>
+          </div>
+          <div class="treatments-grid">
+            <div class="treatment-card animate" data-modal="botox-tx">
+              <div class="treatment-card-img img-placeholder">✨</div>
+              <div class="treatment-card-body">
+                <div class="treatment-card-tag">Anti-Ageing</div>
+                <div class="treatment-card-name">Botox</div>
+                <p class="treatment-card-desc">Relaxes fine lines and expression wrinkles for a refreshed, youthful look. Subtle, natural results every time.</p>
+                <div class="treatment-card-footer">
+                  <span class="treatment-price">From ₹6,000/area</span>
+                  <span class="treatment-sessions">Every 4–6 months</span>
+                </div>
+                <div class="treatment-tap-hint">👆 Tap for details</div>
+              </div>
+            </div>
+            <div class="treatment-card animate" data-modal="filler-tx">
+              <div class="treatment-card-img img-placeholder">💧</div>
+              <div class="treatment-card-body">
+                <div class="treatment-card-tag">Volume & Sculpt</div>
+                <div class="treatment-card-name">Dermal Fillers</div>
+                <p class="treatment-card-desc">HA fillers for lips, cheeks, jawline, and under-eyes. Instant volumization with zero downtime.</p>
+                <div class="treatment-card-footer">
+                  <span class="treatment-price">From ₹18,000/syringe</span>
+                  <span class="treatment-sessions">Lasts 12–18 months</span>
+                </div>
+                <div class="treatment-tap-hint">👆 Tap for details</div>
+              </div>
+            </div>
+            <div class="treatment-card animate" data-modal="iv-tx">
+              <div class="treatment-card-img img-placeholder">🌿</div>
+              <div class="treatment-card-body">
+                <div class="treatment-card-tag">Wellness</div>
+                <div class="treatment-card-name">IV Skin Drip</div>
+                <p class="treatment-card-desc">Glutathione and vitamin C infusion for internal skin brightening, energy, and immunity boosting.</p>
+                <div class="treatment-card-footer">
+                  <span class="treatment-price">From ₹4,500/drip</span>
+                  <span class="treatment-sessions">Monthly</span>
+                </div>
+                <div class="treatment-tap-hint">👆 Tap for details</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- CTA strip -->
+    <section style="background:var(--green-50);padding:56px 0;">
+      <div class="container text-center">
+        <div class="section-label">Ready to Start?</div>
+        <h2 class="section-title">Book Your Consultation Today</h2>
+        <p class="section-sub" style="margin:0 auto 32px;">Let our doctors recommend the perfect treatment for your skin goals.</p>
+        <div class="flex items-center gap-3 flex-wrap" style="justify-content:center;">
+          <a href="booking.html" class="btn btn-primary btn-lg">📅 Book Appointment</a>
+          <a href="https://wa.me/911234567890?text=Hi%2C%20I%27d%20like%20to%20know%20more%20about%20treatments" class="btn btn-whatsapp btn-lg" target="_blank" rel="noopener">💬 Ask on WhatsApp</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <div id="footer-root"></div>
+  <div id="floating-root"></div>
+
+  <!-- ==================== BOTTOM SHEET MODAL ==================== -->
+  <div class="modal-overlay" id="modalOverlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle"></div>
+  <div class="modal-sheet" id="modalSheet">
+    <div class="modal-drag-handle" aria-hidden="true"></div>
+    <button class="modal-close" id="modalClose" aria-label="Close">✕</button>
+    <div class="modal-content" id="modalContent">
+      <!-- populated by JS -->
+    </div>
+  </div>
+
+  <script src="main.js"></script>
+  <script>
+    document.getElementById('header-root').innerHTML = buildHeader('services');
+    document.getElementById('footer-root').innerHTML = buildFooter();
+    document.getElementById('floating-root').innerHTML = buildFloatingButtons();
+
+    // ---- Tab switching ----
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => { b.classList.remove('active'); b.setAttribute('aria-selected','false'); });
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        btn.classList.add('active');
+        btn.setAttribute('aria-selected','true');
+        document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+      });
+    });
+
+    // ---- Modal data ----
+    const MODALS = {
+      'pkg-acne': {
+        badge: 'Most Popular Program',
+        badgeClass: 'badge-green',
+        title: 'Clear Skin Acne Program',
+        tagline: '3-month medically supervised protocol',
+        desc: 'This comprehensive acne program is designed to address active breakouts, reduce post-acne marks, and prevent future flare-ups. Combining the most effective medical-grade modalities into one structured program.',
+        benefits: ['6 customized chemical peel sessions', 'Doctor-prescribed topical regimen', 'Monthly progress review with Dr. Priya', 'Diet & lifestyle counseling', 'WhatsApp support between sessions'],
+        info: [{ val: '3 Months', label: 'Duration' }, { val: '6 Sessions', label: 'Includes' }, { val: '₹8,999', label: 'Package Price' }],
+        waMsg: 'Hi%2C%20I%27d%20like%20to%20book%20the%20Clear%20Skin%20Acne%20Program',
+      },
+      'pkg-hair': {
+        badge: 'Premium Program',
+        badgeClass: 'badge-gold',
+        title: 'Hair Regrowth Program',
+        tagline: 'Advanced PRP + Mesotherapy combination',
+        desc: 'Our most sought-after hair restoration program. Combines clinically proven PRP therapy with scalp-targeted mesotherapy and a personalized home-care regimen to reverse hair loss and promote visible regrowth.',
+        benefits: ['4 PRP (Platelet-Rich Plasma) sessions', 'Comprehensive scalp analysis', 'Medical-grade hair growth serums', 'Nutritional deficiency assessment', 'Customized prescription shampoo & serum'],
+        info: [{ val: '4 Months', label: 'Duration' }, { val: '4 Sessions', label: 'Includes' }, { val: '₹14,999', label: 'Package Price' }],
+        waMsg: 'Hi%2C%20I%27d%20like%20to%20book%20the%20Hair%20Regrowth%20Program',
+      },
+      'pkg-glow': {
+        badge: 'Anti-Ageing',
+        badgeClass: 'badge-green',
+        title: 'Age Reversal Program',
+        tagline: '2-month comprehensive rejuvenation',
+        desc: 'Our premium anti-ageing program addresses fine lines, skin laxity, dullness, and uneven texture through a combination of cutting-edge technologies and injectables.',
+        benefits: ['Botox / filler consultation + 1 area', '3 RF skin tightening sessions', 'Antioxidant IV drip (Glutathione + Vit C)', 'Premium medical-grade skincare kit', 'Monthly doctor review'],
+        info: [{ val: '2 Months', label: 'Duration' }, { val: '5 Sessions', label: 'Includes' }, { val: '₹19,999', label: 'Package Price' }],
+        waMsg: 'Hi%2C%20I%27d%20like%20to%20book%20the%20Age%20Reversal%20Program',
+      },
+      'pkg-glow2': {
+        badge: 'Bridal Special',
+        badgeClass: 'badge-green',
+        title: 'Bridal Glow Package',
+        tagline: 'Pre-bridal skin preparation · 8 weeks',
+        desc: 'Look absolutely radiant on your special day. This 8-week program transforms your skin using a combination of the most effective glow-enhancing treatments, designed to peak right before your wedding.',
+        benefits: ['2 HydraFacial deep cleanse sessions', 'Brightening chemical peel series', 'Skin mesotherapy for inner glow', 'Medical skincare starter kit', 'Final touch-up session 1 week before wedding'],
+        info: [{ val: '8 Weeks', label: 'Duration' }, { val: '5 Sessions', label: 'Includes' }, { val: '₹12,499', label: 'Package Price' }],
+        waMsg: 'Hi%2C%20I%27d%20like%20to%20book%20the%20Bridal%20Glow%20Package',
+      },
+      'acne-tx': {
+        badge: 'Dermatologist Recommended',
+        badgeClass: 'badge-green',
+        title: 'Acne Treatment',
+        tagline: 'Medical-grade protocol · 4–8 sessions',
+        desc: 'Our comprehensive acne treatment addresses the root cause of breakouts — excess oil, clogged pores, bacteria, and inflammation — through a customized combination of topicals, peels, and light-based therapy.',
+        benefits: ['Customized for your acne type', 'Reduces active breakouts from session 2', 'Fades acne marks over time', 'Prevents future breakouts', 'Safe for all skin types'],
+        info: [{ val: '45–60 min', label: 'Per Session' }, { val: '4–8 sessions', label: 'Course' }, { val: 'From ₹1,500', label: 'Per Session' }],
+        waMsg: 'Hi%2C%20I%27d%20like%20to%20book%20an%20Acne%20Treatment',
+      },
+      'hydra-tx': {
+        badge: 'Zero Downtime',
+        badgeClass: 'badge-green',
+        title: 'HydraFacial',
+        tagline: 'Deep cleanse + instant glow · 60 minutes',
+        desc: 'The HydraFacial is a multi-step treatment that cleanses, exfoliates, extracts impurities, and infuses your skin with intensive hydrating serums. Walk out glowing, every single time.',
+        benefits: ['Clears blackheads & whiteheads instantly', 'Deep hydration with HA serum', 'Brightens and evens skin tone', 'No downtime — perfect for events', 'Suitable for all skin types'],
+        info: [{ val: '60 min', label: 'Duration' }, { val: 'Monthly', label: 'Recommended' }, { val: 'From ₹3,500', label: 'Per Session' }],
+        waMsg: 'Hi%2C%20I%27d%20like%20to%20book%20a%20HydraFacial',
+      },
+      'prp-tx': {
+        badge: 'Gold Standard',
+        badgeClass: 'badge-gold',
+        title: 'PRP Hair Therapy',
+        tagline: 'Natural hair regrowth · 4–6 sessions',
+        desc: 'Platelet-Rich Plasma (PRP) therapy uses growth factors from your own blood to stimulate dormant hair follicles and significantly reduce hair fall. Considered the gold standard in non-surgical hair restoration.',
+        benefits: ['Uses your own platelet growth factors', 'Visible density improvement in 3–4 sessions', 'Reduces hair fall from session 2', 'Safe, natural, and effective', 'Suitable for male and female pattern hair loss'],
+        info: [{ val: '45 min', label: 'Per Session' }, { val: '4–6 sessions', label: 'Course' }, { val: 'From ₹3,500', label: 'Per Session' }],
+        waMsg: 'Hi%2C%20I%27d%20like%20to%20book%20a%20PRP%20Hair%20Therapy',
+      },
+      'botox-tx': {
+        badge: 'Anti-Ageing',
+        badgeClass: 'badge-green',
+        title: 'Botox',
+        tagline: 'Subtle anti-ageing · Natural results · 15 minutes',
+        desc: 'Our doctor-only Botox procedure uses FDA-approved botulinum toxin to gently relax overactive facial muscles, softening expression lines for a refreshed, natural look — never frozen.',
+        benefits: ['Forehead lines, frown lines, crow\'s feet', 'Results visible in 3–5 days', 'Lasts 4–6 months', '15-minute walk-in, walk-out procedure', 'FDA-approved product only'],
+        info: [{ val: '15–20 min', label: 'Duration' }, { val: '4–6 months', label: 'Lasts' }, { val: 'From ₹6,000', label: 'Per Area' }],
+        waMsg: 'Hi%2C%20I%27d%20like%20to%20book%20a%20Botox%20consultation',
+      },
+    };
+
+    // Default for unmapped keys
+    function getModalData(key) {
+      return MODALS[key] || {
+        badge: 'Treatment',
+        badgeClass: 'badge-green',
+        title: 'Treatment Details',
+        tagline: 'Expert care at AS Luxe',
+        desc: 'Our doctors will customize this treatment specifically for your skin type, concern, and goals. Book a consultation to get a personalized plan.',
+        benefits: ['Customized to your skin type', 'Doctor-led procedure', 'Evidence-based protocol', 'Post-treatment follow-up included'],
+        info: [{ val: 'Varies', label: 'Duration' }, { val: 'On consultation', label: 'Sessions' }, { val: 'On consultation', label: 'Pricing' }],
+        waMsg: 'Hi%2C%20I%27d%20like%20to%20know%20more%20about%20a%20treatment',
+      };
+    }
+
+    function renderModal(key) {
+      const d = getModalData(key);
+      const infoHTML = d.info.map(i => `
+        <div class="modal-info-chip">
+          <div class="modal-info-chip-val">${i.val}</div>
+          <div class="modal-info-chip-label">${i.label}</div>
+        </div>`).join('');
+      const benefitsHTML = d.benefits.map(b => `<li>${b}</li>`).join('');
+      return `
+        <div class="modal-badge"><span class="badge ${d.badgeClass}">${d.badge}</span></div>
+        <h2 class="modal-title" id="modalTitle">${d.title}</h2>
+        <div class="modal-tagline">${d.tagline}</div>
+        <p class="modal-desc">${d.desc}</p>
+        <div class="modal-section-label">What's Included</div>
+        <ul class="modal-benefits">${benefitsHTML}</ul>
+        <div class="modal-section-label">Treatment Overview</div>
+        <div class="modal-info-row">${infoHTML}</div>
+        <div class="modal-section-label">Before & After</div>
+        <div class="modal-ba-row">
+          <div class="modal-ba-img img-placeholder">😐</div>
+          <div class="modal-ba-img img-placeholder" style="background:linear-gradient(135deg,var(--green-100),var(--green-200))">✨</div>
+        </div>
+        <div class="modal-cta-row">
+          <a href="booking.html" class="btn btn-primary">📅 Book Now</a>
+          <a href="https://wa.me/911234567890?text=${d.waMsg}" target="_blank" rel="noopener" class="btn btn-whatsapp">💬 WhatsApp</a>
+        </div>`;
+    }
+
+    const overlay = document.getElementById('modalOverlay');
+    const sheet = document.getElementById('modalSheet');
+    const content = document.getElementById('modalContent');
+    const closeBtn = document.getElementById('modalClose');
+
+    function openModal(key) {
+      content.innerHTML = renderModal(key);
+      overlay.classList.add('open');
+      sheet.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      closeBtn.focus();
+    }
+
+    function closeModal() {
+      overlay.classList.remove('open');
+      sheet.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    closeBtn.addEventListener('click', closeModal);
+    overlay.addEventListener('click', closeModal);
+
+    document.querySelectorAll('[data-modal]').forEach(el => {
+      el.addEventListener('click', () => openModal(el.dataset.modal));
+    });
+
+    // Swipe down to close
+    let touchStartY = 0;
+    sheet.addEventListener('touchstart', e => { touchStartY = e.changedTouches[0].clientY; }, { passive: true });
+    sheet.addEventListener('touchend', e => {
+      if (e.changedTouches[0].clientY - touchStartY > 80) closeModal();
+    }, { passive: true });
+
+    // Escape key
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+  </script>
+</body>
+</html>
