@@ -212,16 +212,15 @@ function buildFooter() {
           </div>
           <p>Your trusted destination for advanced aesthetics and skin wellness. Backed by science, delivered with care.</p>
           <div class="social-links mt-6">
-            <a href="#" class="social-link" aria-label="Instagram">📷</a>
-            <a href="#" class="social-link" aria-label="Facebook">📘</a>
-            <a href="#" class="social-link" aria-label="YouTube">▶️</a>
+            <a href="https://www.instagram.com/as_lux_clinic" class="social-link" aria-label="Instagram" target="_blank" rel="noopener noreferrer"><img src="https://cdn.simpleicons.org/instagram/ffffff" width="20" height="20" alt="Instagram"></a>
+            <a href="https://www.youtube.com/@ShibalikaDash" class="social-link" aria-label="YouTube" target="_blank" rel="noopener noreferrer"><img src="https://cdn.simpleicons.org/youtube/ffffff" width="20" height="20" alt="YouTube"></a>
           </div>
         </div>
         <div class="footer-col">
           <h4>Treatments</h4>
           <ul>
-            <li><a href="services.html">Acne &amp; Skin</a></li>
-            <li><a href="services.html">Hair &amp; Scalp</a></li>
+            <li><a href="services.html#face">Acne &amp; Skin</a></li>
+            <li><a href="services.html#hair">Hair &amp; Scalp</a></li>
             <li><a href="services.html">Anti-Ageing</a></li>
             <li><a href="services.html">View All →</a></li>
           </ul>
