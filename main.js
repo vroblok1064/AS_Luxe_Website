@@ -256,7 +256,7 @@ function buildFooter() {
       </div>
       <div style="margin: 0 0 32px; height:160px; overflow:hidden; border-radius:12px;">
         <iframe
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3703.0543945716076!2d84.00359117535643!3d21.855437480008973!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a20e7d455e29115%3A0x35a236a3a41c1463!2sAS%20aesthetic%20and%20wellness%20centre(skin%20hair%20laser)!5e0!3m2!1sen!2sin!4v1776314684617!5m2!1sen!2sin"
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3702.7652683488645!2d84.02338657535672!3d21.866588080000852!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a20e52b9740a1b9%3A0x3020d92950e93426!2sMEDICAZONE%20POLYCLINIC%20N!5e0!3m2!1sen!2sin!4v1776515187087!5m2!1sen!2sin"
           width="100%" height="160" style="border:0; display:block;"
           allowfullscreen="" loading="lazy"
           title="AS Aesthetics &amp; Wellness Centre location"
